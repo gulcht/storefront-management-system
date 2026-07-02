@@ -61,8 +61,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to fetch products')
       const data = await res.json()
       set({ products: data })
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
     } finally {
       set({ loading: false })
     }
@@ -74,7 +74,7 @@ export const useProductStore = create<ProductState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to fetch categories')
       const data = await res.json()
       set({ categories: data })
-    } catch (err: any) {
+    } catch (err) {
       console.error(err)
     }
   },
@@ -92,8 +92,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       }
       await get().fetchProducts()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })
@@ -113,8 +113,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       }
       await get().fetchProducts()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })
@@ -130,8 +130,8 @@ export const useProductStore = create<ProductState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to delete product')
       await get().fetchProducts()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })

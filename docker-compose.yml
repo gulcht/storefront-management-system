@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: bunny
+      POSTGRES_PASSWORD: bunny1234!
+      POSTGRES_DB: storefront_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: storefront_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=django-insecure-your-secret-key-here
+      - DEBUG=True
+      - DB_NAME=storefront_db
+      - DB_USER=bunny
+      - DB_PASSWORD=bunny1234!
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: storefront_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api
+      - CI=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend

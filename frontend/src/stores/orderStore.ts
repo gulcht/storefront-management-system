@@ -40,8 +40,8 @@ export const useOrderStore = create<OrderState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to fetch orders')
       const data = await res.json()
       set({ orders: data })
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
     } finally {
       set({ loading: false })
     }
@@ -57,8 +57,8 @@ export const useOrderStore = create<OrderState>((set, get) => ({
       if (!res.ok) throw new Error(data.detail || 'Order placement failed')
       await get().fetchOrders()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })

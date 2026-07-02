@@ -77,12 +77,9 @@ export function SellerDashboard() {
       formData.append('image', imageFile)
     }
 
-    let success = false
-    if (editingProduct) {
-      success = await updateProduct(editingProduct.id, formData)
-    } else {
-      success = await createProduct(formData)
-    }
+    const success = editingProduct
+      ? await updateProduct(editingProduct.id, formData)
+      : await createProduct(formData)
 
     if (success) {
       setIsOpen(false)

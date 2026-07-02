@@ -23,14 +23,6 @@ export function BuyerMarketplace() {
   // Add quantity limits per product
   const [quantities, setQuantities] = useState<Record<number, number>>({})
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
-  useEffect(() => {
-    applyFilters()
-  }, [category, minPrice, maxPrice])
-
   const applyFilters = () => {
     const params: Record<string, string> = {}
     if (search) params.search = search
@@ -39,6 +31,16 @@ export function BuyerMarketplace() {
     if (maxPrice) params.max_price = maxPrice
     fetchProducts(params)
   }
+
+  useEffect(() => {
+    fetchCategories()
+  }, [fetchCategories])
+
+  useEffect(() => {
+    applyFilters()
+
+  }, [category, minPrice, maxPrice])
+
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()

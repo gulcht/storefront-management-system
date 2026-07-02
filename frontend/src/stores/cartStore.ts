@@ -40,8 +40,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to fetch cart')
       const data = await res.json()
       set({ cart: data })
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
     } finally {
       set({ loading: false })
     }
@@ -59,8 +59,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error(data.detail || 'Failed to add item to cart')
       await get().fetchCart()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })
@@ -79,8 +79,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error(data.detail || 'Failed to update quantity')
       await get().fetchCart()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })
@@ -96,8 +96,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to remove item')
       await get().fetchCart()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })
@@ -113,8 +113,8 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!res.ok) throw new Error('Failed to clear cart')
       await get().fetchCart()
       return true
-    } catch (err: any) {
-      set({ error: err.message })
+    } catch (err) {
+      set({ error: err instanceof Error ? err.message : String(err) })
       return false
     } finally {
       set({ loading: false })

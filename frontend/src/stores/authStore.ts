@@ -18,8 +18,8 @@ interface AuthState {
   setTokens: (access: string, refresh: string) => void
   setUser: (user: User | null) => void
   clearAuth: () => void
-  login: (credentials: any) => Promise<boolean>
-  register: (data: any) => Promise<boolean>
+  login: (credentials: Record<string, string>) => Promise<boolean>
+  register: (data: Record<string, string>) => Promise<boolean>
   fetchProfile: () => Promise<void>
 }
 
@@ -72,8 +72,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
         get().setTokens(data.access, data.refresh)
         get().setUser(data.user)
         return true
-      } catch (err: any) {
-        set({ error: err.message })
+      } catch (err) {
+        set({ error: err instanceof Error ? err.message : String(err) })
         return false
       } finally {
         set({ loading: false })
@@ -94,8 +94,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
           throw new Error(detail)
         }
         return true
-      } catch (err: any) {
-        set({ error: err.message })
+      } catch (err) {
+        set({ error: err instanceof Error ? err.message : String(err) })
         return false
       } finally {
         set({ loading: false })
@@ -125,7 +125,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
 // Helper to make authenticated requests with token auto-refresh
 export async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
-  let access = localStorage.getItem('access_token')
+  const access = localStorage.getItem('access_token')
   const refresh = localStorage.getItem('refresh_token')
 
   if (!access) {
